@@ -1,5 +1,6 @@
 package com.type;
 
+import com.exception.ExpressionParseException;
 import com.exception.IncorrectPowerException;
 import com.exception.WrongFactorException;
 
@@ -14,10 +15,19 @@ public class SimpleExpression implements Cloneable {
 
 	public SimpleExpression(String s) {
 		factors = new double[MAX_FACTORS];
-		if (s.endsWith("x")) {
-			factors[1] = Double.parseDouble(s.substring(0, s.length() - 1));
-		} else {
-			factors[0] = Double.parseDouble(s);
+		try {
+			if (s.endsWith("x")) {
+				String numberString = s.substring(0, s.length() - 1);
+				if (numberString.isEmpty()) {
+					factors[1] = 1;
+				} else {
+					factors[1] = Double.parseDouble(numberString);
+				}
+			} else {
+				factors[0] = Double.parseDouble(s);
+			}
+		} catch (Exception e) {
+			throw new ExpressionParseException("Couldn't parse " + s + " to expression", e);
 		}
 	}
 
@@ -78,6 +88,7 @@ public class SimpleExpression implements Cloneable {
 	}
 
 	public SimpleExpression exponent(SimpleExpression exp) {
+		assertCorrectPower(exp.getFactors());
 		int pow = (int) exp.getFactors()[0];
 		if (pow == 0) {
 			return getSingleIntegerExpression(1);
@@ -92,6 +103,16 @@ public class SimpleExpression implements Cloneable {
 			return newExpression;
 		}
 		throw new IncorrectPowerException(pow);
+	}
+
+	private void assertCorrectPower(double[] factors) throws IncorrectPowerException {
+		if (factors[0] < 0 || factors[0] % 1 != 0) {
+			throw new IncorrectPowerException(factors[0]);
+		}
+		for (int i = 1; i < MAX_FACTORS; i++) {
+			if (factors[i] != 0)
+				throw new IncorrectPowerException(factors[i], i);
+		}
 	}
 
 	private SimpleExpression getSingleIntegerExpression(int i) {

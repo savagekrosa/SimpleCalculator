@@ -3,6 +3,7 @@ package com.type;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import com.exception.InfixParseException;
 import com.exception.WrongOperatorException;
 import com.parser.InfixToPostfixParser;
 
@@ -10,11 +11,11 @@ public class CalculatedExpression {
 
 	private SimpleExpression result;
 
-	public CalculatedExpression(String expression) {
+	public CalculatedExpression(String expression) throws InfixParseException {
 		String postfix = InfixToPostfixParser.parse(expression);
 		result = convertToExpressionType(postfix);
 	}
-	
+
 	protected boolean isOperator(String s) {
 		return s.equals("+") || s.equals("*") || s.equals("-") || s.equals("/") || s.equals("^");
 	}
@@ -34,7 +35,11 @@ public class CalculatedExpression {
 				stack.push(simpleCalculate(s.charAt(0), value1, value2));
 			}
 		}
-		
+
+		if (stack.size() != 1) {
+			throw new IncorrectExpressionException("There are " + (stack.size() - 1) + " extra symbol(s) "
+					+ "in postfix expression: " + postfix);
+		}
 		return stack.pop();
 	}
 
@@ -57,12 +62,12 @@ public class CalculatedExpression {
 	public SimpleExpression getResult() {
 		return result;
 	}
-	
+
 	@Override
 	public String toString() {
 		return result.toString();
 	}
-	
+
 	public double calculate(double x) {
 		return result.calculate(x);
 	}

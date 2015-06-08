@@ -10,7 +10,11 @@ public class IncorrectPowerException extends RuntimeException {
 		super(message);
 	}
 
-	public IncorrectPowerException(Object message) {
-		super("Unexpected power in exponentiation, should be non-negative integer, got: " + message);
+	public IncorrectPowerException(Number i) {
+		super("Unexpected power in exponentiation, should be non-negative integer, got: " + i);
+	}
+	
+	public IncorrectPowerException(Number pow, Integer i) {
+		super("Only simple integers can be used as power, instead got " + i + "th factor of ) " + pow);
 	}
 }

@@ -1,6 +1,6 @@
 package com.exception;
 
-public class ImbalancedBracesException extends RuntimeException {
+public class ImbalancedBracesException extends InfixParseException {
 
 	public ImbalancedBracesException() {
 		super();

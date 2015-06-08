@@ -4,6 +4,7 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import com.exception.ImbalancedBracesException;
+import com.exception.InfixParseException;
 
 public final class InfixToPostfixParser {
 
@@ -11,7 +12,7 @@ public final class InfixToPostfixParser {
 	};
 
 	// Algorithm: http://en.wikipedia.org/wiki/Shunting-yard_algorithm
-	public static String parse(String infix) throws ImbalancedBracesException {
+	public static String parse(String infix) throws InfixParseException {
 		if (!hasBalancedBraces(infix)) {
 			throw new ImbalancedBracesException("Imbalanced braces!");
 		}
@@ -30,6 +31,9 @@ public final class InfixToPostfixParser {
 			} else if (s.equals("(")) {
 				stack.push(s);
 			} else if (s.equals(")")) {
+				if (stack.peek().equals("(")) {
+					
+				}
 				while (!stack.peek().equals("(")) {
 					postfix += stack.pop() + " ";
 				}
