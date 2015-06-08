@@ -1,16 +1,17 @@
-package com.util;
+package com.parser;
 
 import java.util.Stack;
 import java.util.StringTokenizer;
 
 import com.exception.ImbalancedBracesException;
 
-public final class InfixToPostfixConverter {
+public final class InfixToPostfixParser {
 
-	private InfixToPostfixConverter() {
+	private InfixToPostfixParser() {
 	};
 
-	public static String convert(String infix) throws ImbalancedBracesException {
+	// Algorithm: http://en.wikipedia.org/wiki/Shunting-yard_algorithm
+	public static String parse(String infix) throws ImbalancedBracesException {
 		if (!hasBalancedBraces(infix)) {
 			throw new ImbalancedBracesException("Imbalanced braces!");
 		}
@@ -20,13 +21,9 @@ public final class InfixToPostfixConverter {
 
 		while (tokenizer.hasMoreTokens()) {
 			String s = tokenizer.nextToken();
-
-			// Algorytm: http://en.wikipedia.org/wiki/Shunting-yard_algorithm
-			// On nie jest kompletnie zrobiony, na razie jest uproszczony i moze nie dzialac poprawnie
-			// Konkretnie chodzi o linijke comparePriority(stack, s) >= 0 ktora jest nizej
 			
 			if (isOperator(s)) {
-				while (!stack.empty() && comparePriority(stack, s) >= 0) {
+				while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
 					postfix += stack.pop() + " ";
 				}
 				stack.push(s);
@@ -46,6 +43,14 @@ public final class InfixToPostfixConverter {
 		}
 
 		return postfix;
+	}
+
+	protected static boolean isHigherOrEqualPrecedence(String op1, String op2) {
+		int priorityCompare = getPriority(op1) - getPriority(op2);
+		if (op2.equals("^")) {
+			return priorityCompare > 0;
+		}
+		return priorityCompare >= 0;
 	}
 
 	public static boolean hasBalancedBraces(String infix) {
@@ -74,15 +79,13 @@ public final class InfixToPostfixConverter {
 		return s.equals("+") || s.equals("*") || s.equals("-") || s.equals("/") || s.equals("^");
 	}
 
-	protected static int comparePriority(Stack<String> stack, String s) {
-		return getPriority(stack.peek()) - getPriority(s);
-	}
-
 	protected static int getPriority(String operator) {
 		if (operator.equals("+") || operator.equals("-"))
 			return 1;
-		else if (operator.equals("*") || operator.equals("/") || operator.equals("^"))
+		else if (operator.equals("*") || operator.equals("/"))
 			return 2;
+		else if (operator.equals("^"))
+			return 3;
 		else
 			return 0;
 	}

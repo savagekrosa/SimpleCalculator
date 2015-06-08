@@ -4,14 +4,14 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import com.exception.WrongOperatorException;
-import com.util.InfixToPostfixConverter;
+import com.parser.InfixToPostfixParser;
 
 public class CalculatedExpression {
 
 	private SimpleExpression result;
 
 	public CalculatedExpression(String expression) {
-		String postfix = InfixToPostfixConverter.convert(expression);
+		String postfix = InfixToPostfixParser.parse(expression);
 		result = convertToExpressionType(postfix);
 	}
 	
