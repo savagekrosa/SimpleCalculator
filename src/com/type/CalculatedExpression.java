@@ -3,6 +3,7 @@ package com.type;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import com.exception.IncorrectExpressionException;
 import com.exception.InfixParseException;
 import com.exception.WrongOperatorException;
 import com.parser.InfixToPostfixParser;
