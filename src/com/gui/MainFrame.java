@@ -65,6 +65,12 @@ public class MainFrame extends JFrame {
 		
 		JButton btnDrawGraph = new JButton("Draw graph");
 		btnDrawGraph.setBounds(167, 285, 107, 25);
+		btnDrawGraph.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				parent.drawGraph();
+			}
+		});
 		
 		JLabel labelPR = new JLabel("Parsing result:");
 		labelPR.setBounds(12, 120, 107, 21);
