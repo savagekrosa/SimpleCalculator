@@ -29,9 +29,8 @@ public class MainClass {
 			expression = null;
 		} else {
 			try {
-				CalculatedExpression calculatedExpression = new CalculatedExpression(expressionText);
-				expression = calculatedExpression;
-				frame.setParseResult("Parse succesful!", 1);
+				expression = new CalculatedExpression(expressionText);
+				frame.setParseResult(expression.toString(), 1);
 			} catch (Exception e) {
 				if (e.getMessage() != null) {
 					frame.setParseResult(e.getMessage(), -1);
@@ -51,13 +50,33 @@ public class MainClass {
 		JOptionPane.showMessageDialog(new JFrame(), message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
-	public void drawGraph() {
+	public void drawGraph(String start, String end) {
 		if (expression != null) {
-			FunctionDrawingData funcData = new FunctionDrawingData(expression);
+			FunctionDrawingData funcData;
+			try {
+				funcData = new FunctionDrawingData(expression, Double.parseDouble(start), Double.parseDouble(end));
+			} catch (NumberFormatException e) {
+				showErrorMessage("Incorrect range, will draw with default range instead");
+				funcData = new FunctionDrawingData(expression);
+			}
 			MainGraph graph = new MainGraph(funcData);
 			graph.setVisible(true);
 		} else {
 			showErrorMessage("There is no parsed exception!");
+		}
+	}
+
+	public void showCalculateDialog(String arg) {
+		try {
+			if (expression != null) {
+				double argument = Double.parseDouble(arg);
+				String result = "Result for " + argument + " is: " + expression.calculate(argument);
+				JOptionPane.showMessageDialog(new JFrame(), result, "Result", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				showErrorMessage("There is no parsed exception!");
+			}
+		} catch (NumberFormatException e) {
+			showErrorMessage("Argument needs to be a number!");
 		}
 	}
 

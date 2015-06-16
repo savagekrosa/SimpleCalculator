@@ -142,6 +142,8 @@ public class SimpleExpression implements Cloneable {
 			} else if (factors[i] < 0) {
 				if (!expression.isEmpty())
 					expression += " - ";
+				else
+					expression += "-";
 				if (i == 0 || factors[i] != 1)
 					expression += (-factors[i]);
 			}

@@ -15,6 +15,6 @@ public class IncorrectPowerException extends RuntimeException {
 	}
 	
 	public IncorrectPowerException(Number pow, Integer i) {
-		super("Only simple integers can be used as power, instead got " + i + "th factor of ) " + pow);
+		super("Only simple integers can be used as power, instead got " + i + "th factor of " + pow);
 	}
 }

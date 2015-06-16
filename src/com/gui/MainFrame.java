@@ -16,13 +16,17 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import com.MainClass;
+import javax.swing.JSeparator;
 
 public class MainFrame extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField expressionTextField;
-	private JTextArea parseResultText;
 	private MainClass parent;
+	private JTextArea parseResultText;
+	private JTextField expressionTextField;
+	private JTextField fromTextField;
+	private JTextField toTextField;
+	private JTextField calculateTextField;
 	
 	/**
 	 * Create the frame.
@@ -31,7 +35,7 @@ public class MainFrame extends JFrame {
 		this.parent = pParent;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 370);
+		setBounds(100, 100, 450, 385);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -64,11 +68,11 @@ public class MainFrame extends JFrame {
 		});
 		
 		JButton btnDrawGraph = new JButton("Draw graph");
-		btnDrawGraph.setBounds(167, 285, 107, 25);
+		btnDrawGraph.setBounds(167, 305, 107, 25);
 		btnDrawGraph.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				parent.drawGraph();
+				parent.drawGraph(fromTextField.getText(), toTextField.getText());
 			}
 		});
 		
@@ -85,8 +89,19 @@ public class MainFrame extends JFrame {
 		parseResultText.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		
 		JButton btnCalculate = new JButton("Calculate");
-		btnCalculate.setBounds(167, 229, 107, 25);
+		btnCalculate.setBounds(167, 225, 107, 25);
+		btnCalculate.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				parent.showCalculateDialog(calculateTextField.getText());
+			}
+		});
+		
+		
 		contentPane.setLayout(null);
+		JSeparator separator = new JSeparator();
+		separator.setBounds(0, 190, 432, 16);
+		contentPane.add(separator);
 		contentPane.add(lblSimpleCalculator);
 		contentPane.add(labelPR);
 		contentPane.add(btnParse);
@@ -96,6 +111,40 @@ public class MainFrame extends JFrame {
 		contentPane.add(expressionTextField);
 		contentPane.add(btnDrawGraph);
 		contentPane.add(btnCalculate);
+		
+		JLabel lblNewLabel = new JLabel("From x =");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(12, 275, 63, 16);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblToX = new JLabel("To x =");
+		lblToX.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblToX.setBounds(245, 275, 56, 16);
+		contentPane.add(lblToX);
+		
+		fromTextField = new JTextField();
+		fromTextField.setBounds(87, 273, 116, 22);
+		contentPane.add(fromTextField);
+		fromTextField.setColumns(10);
+		
+		toTextField = new JTextField();
+		toTextField.setColumns(10);
+		toTextField.setBounds(304, 273, 116, 22);
+		contentPane.add(toTextField);
+		
+		JLabel lblNewLabel_1 = new JLabel("x = ");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(10, 196, 35, 27);
+		contentPane.add(lblNewLabel_1);
+		
+		calculateTextField = new JTextField();
+		calculateTextField.setColumns(10);
+		calculateTextField.setBounds(44, 199, 376, 22);
+		contentPane.add(calculateTextField);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setBounds(0, 265, 432, 16);
+		contentPane.add(separator_1);
 	}
 
 	public String getExpressionText() {
@@ -112,4 +161,5 @@ public class MainFrame extends JFrame {
 			parseResultText.setForeground(null);
 		}
 	}
+	
 }
