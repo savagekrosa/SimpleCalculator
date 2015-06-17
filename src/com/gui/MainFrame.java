@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
 		lblExpression.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JLabel lblY = new JLabel("y =");
-		lblY.setBounds(98, 55, 26, 21);
+		lblY.setBounds(93, 55, 35, 21);
 		lblY.setFont(new Font("Cambria Math", Font.PLAIN, 17));
 		
 		JButton btnParse = new JButton("Parse");
@@ -78,7 +78,7 @@ public class MainFrame extends JFrame {
 		
 		JLabel labelPR = new JLabel("Parsing result:");
 		labelPR.setBounds(12, 120, 107, 21);
-		labelPR.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		labelPR.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
 		parseResultText = new JTextArea("Not yet parsed");
 		parseResultText.setRows(2);
@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
 		parseResultText.setBackground(UIManager.getColor("Button.background"));
 		parseResultText.setEditable(false);
 		parseResultText.setBounds(131, 120, 276, 69);
-		parseResultText.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		parseResultText.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
 		JButton btnCalculate = new JButton("Calculate");
 		btnCalculate.setBounds(167, 225, 107, 25);

@@ -30,9 +30,17 @@ public class CalculatedExpression {
 			if (!isOperator(s)) {
 				SimpleExpression value = new SimpleExpression(s);
 				stack.push(value);
-			} else {
+			} else if (!s.equals("-") && !s.equals("+")) {
 				SimpleExpression value1 = stack.pop();
 				SimpleExpression value2 = stack.pop();
+				stack.push(simpleCalculate(s.charAt(0), value1, value2));
+			} else {
+				SimpleExpression value1 = stack.pop();
+				SimpleExpression value2;
+				if (stack.isEmpty())
+					value2 = new SimpleExpression("0");
+				else
+					value2 = stack.pop();
 				stack.push(simpleCalculate(s.charAt(0), value1, value2));
 			}
 		}
