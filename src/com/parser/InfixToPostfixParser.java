@@ -33,10 +33,14 @@ public final class InfixToPostfixParser {
 			} else if (s.equals("-")) {
 				if(!stack.empty() && (isOperator(stack.peek()) || stack.peek().equals("(")) && addedOp == true){
 					postfix += s;
-					String ss = tokenizer.nextToken();
-					postfix += ss + " ";
+					s = tokenizer.nextToken();
+					postfix += s + " ";
 					postfix += stack.pop() + " ";
-                } else {
+                } else if(stack.empty() && postfix == "") {
+					postfix += s;
+					s = tokenizer.nextToken();
+					postfix += s + " ";
+				} else {
                     while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
                         postfix += stack.pop() + " ";
                     }
