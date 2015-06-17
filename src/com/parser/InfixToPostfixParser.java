@@ -16,18 +16,34 @@ public final class InfixToPostfixParser {
 		if (!hasBalancedBraces(infix)) {
 			throw new ImbalancedBracesException("Imbalanced braces!");
 		}
+		boolean addedOp = false;
 		String postfix = "";
 		Stack<String> stack = new Stack<String>();
 		StringTokenizer tokenizer = new StringTokenizer(infix, "+-*/()^", true);
 
 		while (tokenizer.hasMoreTokens()) {
 			String s = tokenizer.nextToken();
-			
+
 			if (isOperator(s)) {
 				while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
 					postfix += stack.pop() + " ";
 				}
+				addedOp = true;
 				stack.push(s);
+			} else if (s.equals("-")) {
+				if(!stack.empty() && (isOperator(stack.peek()) || stack.peek().equals("(")) && addedOp == true){
+					postfix += s;
+					String ss = tokenizer.nextToken();
+					postfix += ss + " ";
+					postfix += stack.pop() + " ";
+                } else {
+                    while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
+                        postfix += stack.pop() + " ";
+                    }
+					addedOp = true;
+                    stack.push(s);
+                }
+
 			} else if (s.equals("(")) {
 				stack.push(s);
 			} else if (s.equals(")")) {
@@ -40,12 +56,12 @@ public final class InfixToPostfixParser {
 				stack.pop();
 			} else {
 				postfix += s + " ";
+				addedOp = false;
 			}
 		}
 		while (!stack.empty()) {
 			postfix += stack.pop() + " ";
 		}
-
 		return postfix;
 	}
 
@@ -80,7 +96,7 @@ public final class InfixToPostfixParser {
 	}
 
 	protected static boolean isOperator(String s) {
-		return s.equals("+") || s.equals("*") || s.equals("-") || s.equals("/") || s.equals("^");
+		return s.equals("+") || s.equals("*") || s.equals("/") || s.equals("^");
 	}
 
 	protected static int getPriority(String operator) {
