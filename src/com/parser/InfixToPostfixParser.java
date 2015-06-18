@@ -31,9 +31,12 @@ public final class InfixToPostfixParser {
 				addedOp = true;
 				stack.push(s);
 			} else if (s.equals("-")) {
-				if(stack.empty() || (!isNumber(stack.peek()) && addedOp == true)){
+				if((stack.empty() && postfix.isEmpty())
+						|| (!stack.empty() && !isNumber(stack.peek()) && addedOp == true)){
 					postfix += s;
 					s = tokenizer.nextToken();
+					if (stack.empty() && !isNumber(s))
+						throw new InfixParseException();
 					postfix += s + " ";
                 } else {
                     while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
@@ -46,6 +49,7 @@ public final class InfixToPostfixParser {
 				addedOp = true;
 				stack.push(s);
 			} else if (s.equals(")")) {
+				addedOp = false;
 				while (!stack.peek().equals("(")) {
 					postfix += stack.pop() + " ";
 				}

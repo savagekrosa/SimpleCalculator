@@ -20,6 +20,8 @@ public class SimpleExpression implements Cloneable {
 				String numberString = s.substring(0, s.length() - 1);
 				if (numberString.isEmpty()) {
 					factors[1] = 1;
+				} else if (numberString.equals("-")) {
+					factors[1] = -1;
 				} else {
 					factors[1] = Double.parseDouble(numberString);
 				}
