@@ -24,23 +24,18 @@ public final class InfixToPostfixParser {
 		while (tokenizer.hasMoreTokens()) {
 			String s = tokenizer.nextToken();
 
-			if (isOperator(s)) {
+			if (isNonMinusOperator(s)) {
 				while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
 					postfix += stack.pop() + " ";
 				}
 				addedOp = true;
 				stack.push(s);
 			} else if (s.equals("-")) {
-				if(!stack.empty() && (isOperator(stack.peek()) || stack.peek().equals("(")) && addedOp == true){
+				if(stack.empty() || (!isNumber(stack.peek()) && addedOp == true)){
 					postfix += s;
 					s = tokenizer.nextToken();
 					postfix += s + " ";
-					postfix += stack.pop() + " ";
-                } else if(stack.empty() && postfix == "") {
-					postfix += s;
-					s = tokenizer.nextToken();
-					postfix += s + " ";
-				} else {
+                } else {
                     while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
                         postfix += stack.pop() + " ";
                     }
@@ -51,14 +46,11 @@ public final class InfixToPostfixParser {
 			} else if (s.equals("(")) {
 				stack.push(s);
 			} else if (s.equals(")")) {
-				if (stack.peek().equals("(")) {
-					
-				}
 				while (!stack.peek().equals("(")) {
 					postfix += stack.pop() + " ";
 				}
 				stack.pop();
-			} else {
+			} else if (!s.trim().isEmpty()) {
 				postfix += s + " ";
 				addedOp = false;
 			}
@@ -99,8 +91,12 @@ public final class InfixToPostfixParser {
 		return stack.isEmpty();
 	}
 
-	protected static boolean isOperator(String s) {
+	protected static boolean isNonMinusOperator(String s) {
 		return s.equals("+") || s.equals("*") || s.equals("/") || s.equals("^");
+	}
+	
+	protected static boolean isNumber(String s) {
+		return !isNonMinusOperator(s) && !s.equals("-") && !s.equals("(");
 	}
 
 	protected static int getPriority(String operator) {
