@@ -35,29 +35,32 @@ public final class InfixToPostfixParser {
 					postfix += s;
 					s = tokenizer.nextToken();
 					postfix += s + " ";
-					postfix += stack.pop() + " ";
-                } else if(stack.empty() && postfix == "") {
+					if(isOperator(stack.peek()))
+						postfix += stack.pop() + " ";
+				} else if(stack.empty() && postfix == "") {
 					postfix += s;
 					s = tokenizer.nextToken();
 					postfix += s + " ";
 				} else {
-                    while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
-                        postfix += stack.pop() + " ";
-                    }
+					while (!stack.empty() && isHigherOrEqualPrecedence(stack.peek(), s)) {
+						postfix += stack.pop() + " ";
+					}
 					addedOp = true;
-                    stack.push(s);
-                }
+					stack.push(s);
+				}
 
 			} else if (s.equals("(")) {
+				addedOp = true;
 				stack.push(s);
 			} else if (s.equals(")")) {
 				if (stack.peek().equals("(")) {
-					
+
 				}
 				while (!stack.peek().equals("(")) {
 					postfix += stack.pop() + " ";
 				}
 				stack.pop();
+				addedOp = true;
 			} else {
 				postfix += s + " ";
 				addedOp = false;
