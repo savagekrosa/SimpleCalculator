@@ -40,10 +40,10 @@ public final class InfixToPostfixParser {
                         postfix += stack.pop() + " ";
                     }
 					addedOp = true;
-                    stack.push(s);
-                }
-
+					stack.push(s);
+				}
 			} else if (s.equals("(")) {
+				addedOp = true;
 				stack.push(s);
 			} else if (s.equals(")")) {
 				while (!stack.peek().equals("(")) {
