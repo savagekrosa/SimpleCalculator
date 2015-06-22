@@ -1,5 +1,6 @@
 package com.type;
 
+import java.io.IOException;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -12,7 +13,7 @@ public class CalculatedExpression {
 
 	private SimpleExpression result;
 
-	public CalculatedExpression(String expression) throws InfixParseException {
+	public CalculatedExpression(String expression) throws InfixParseException, IOException {
 		String postfix = InfixToPostfixParser.parse(expression);
 		result = convertToExpressionType(postfix);
 	}
