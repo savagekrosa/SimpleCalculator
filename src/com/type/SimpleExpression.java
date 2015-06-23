@@ -1,7 +1,7 @@
 package com.type;
 
-import com.exception.ExpressionParseException;
 import com.exception.IncorrectPowerException;
+import com.exception.SimpleExpressionParseException;
 import com.exception.WrongFactorException;
 
 public class SimpleExpression implements Cloneable {
@@ -13,7 +13,7 @@ public class SimpleExpression implements Cloneable {
 		this.factors = factors.clone();
 	}
 
-	public SimpleExpression(String s) {
+	public SimpleExpression(String s) throws SimpleExpressionParseException {
 		factors = new double[MAX_FACTORS];
 		try {
 			if (s.endsWith("x")) {
@@ -29,7 +29,7 @@ public class SimpleExpression implements Cloneable {
 				factors[0] = Double.parseDouble(s);
 			}
 		} catch (Exception e) {
-			throw new ExpressionParseException("Couldn't parse " + s + " to expression", e);
+			throw new SimpleExpressionParseException("Couldn't parse " + s + " to simple expression", e);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class SimpleExpression implements Cloneable {
 		return this;
 	}
 
-	public SimpleExpression multiply(SimpleExpression exp) {
+	public SimpleExpression multiply(SimpleExpression exp) throws WrongFactorException {
 		double[] factors2 = exp.getFactors();
 		double[] newFactors = new double[MAX_FACTORS];
 		for (int i = 0; i < factors.length; i++)
@@ -71,7 +71,7 @@ public class SimpleExpression implements Cloneable {
 		return new SimpleExpression(newFactors);
 	}
 
-	public SimpleExpression divide(SimpleExpression exp) {
+	public SimpleExpression divide(SimpleExpression exp) throws WrongFactorException {
 		double[] factors2 = exp.getFactors();
 		double[] newFactors = new double[MAX_FACTORS];
 		for (int i = 0; i < factors.length; i++)
@@ -89,7 +89,7 @@ public class SimpleExpression implements Cloneable {
 		return new SimpleExpression(newFactors);
 	}
 
-	public SimpleExpression exponent(SimpleExpression exp) {
+	public SimpleExpression exponent(SimpleExpression exp) throws IncorrectPowerException, WrongFactorException {
 		assertCorrectPower(exp.getFactors());
 		int pow = (int) exp.getFactors()[0];
 		if (pow == 0) {
@@ -113,7 +113,7 @@ public class SimpleExpression implements Cloneable {
 		}
 		for (int i = 1; i < MAX_FACTORS; i++) {
 			if (factors[i] != 0)
-				throw new IncorrectPowerException(factors[i], i);
+				throw new IncorrectPowerException(factors[i]);
 		}
 	}
 

@@ -1,28 +1,33 @@
 package com.type;
 
-import java.io.IOException;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
-import com.exception.IncorrectExpressionException;
+import com.exception.ExpressionParseException;
 import com.exception.InfixParseException;
+import com.exception.SimpleExpressionParseException;
 import com.exception.WrongOperatorException;
 import com.parser.InfixToPostfixParser;
 
 public class CalculatedExpression {
 
 	private SimpleExpression result;
+	private String postfix;
 
-	public CalculatedExpression(String expression) throws InfixParseException, IOException {
-		String postfix = InfixToPostfixParser.parse(expression);
-		result = convertToExpressionType(postfix);
+	public CalculatedExpression(String expression) throws InfixParseException, ExpressionParseException {
+		postfix = InfixToPostfixParser.parse(expression);
+		try {
+			result = convertToExpressionType(postfix);
+		} catch (SimpleExpressionParseException e) {
+			throw new ExpressionParseException(e, postfix);
+		}
 	}
 
 	protected boolean isOperator(String s) {
 		return s.equals("+") || s.equals("*") || s.equals("-") || s.equals("/") || s.equals("^");
 	}
 
-	private SimpleExpression convertToExpressionType(String postfix) {
+	private SimpleExpression convertToExpressionType(String postfix) throws ExpressionParseException, SimpleExpressionParseException {
 		Stack<SimpleExpression> stack = new Stack<SimpleExpression>();
 		StringTokenizer tokenizer = new StringTokenizer(postfix, " ");
 
@@ -47,13 +52,13 @@ public class CalculatedExpression {
 		}
 
 		if (stack.size() != 1) {
-			throw new IncorrectExpressionException("There are " + (stack.size() - 1) + " extra symbol(s) "
-					+ "in postfix expression: " + postfix);
+			throw new ExpressionParseException("There are " + (stack.size() - 1) + " extra symbol(s) " + "in postfix expression", postfix);
 		}
 		return stack.pop();
 	}
 
-	protected SimpleExpression simpleCalculate(char operator, SimpleExpression value1, SimpleExpression value2) {
+	protected SimpleExpression simpleCalculate(char operator, SimpleExpression value1, SimpleExpression value2)
+			throws SimpleExpressionParseException {
 		switch (operator) {
 			case '*':
 				return value2.multiply(value1);
@@ -66,7 +71,7 @@ public class CalculatedExpression {
 			case '^':
 				return value2.exponent(value1);
 		}
-		throw new WrongOperatorException(operator + " is not a proper operator");
+		throw new WrongOperatorException(operator + " is not a proper operator", postfix);
 	}
 
 	public SimpleExpression getResult() {

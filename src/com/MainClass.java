@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.drawer.MainGraph;
+import com.exception.ExpressionParseException;
+import com.exception.InfixParseException;
 import com.gui.MainFrame;
 import com.type.CalculatedExpression;
 import com.type.FunctionDrawingData;
@@ -31,23 +33,40 @@ public class MainClass {
 			try {
 				expression = new CalculatedExpression(expressionText);
 				frame.setParseResult(expression.toString(), 1);
+			} catch (InfixParseException e) {
+				handleException(e, "Infix parse error");
+			} catch (ExpressionParseException e) {
+				handleException(e, "Postfix parse error");
 			} catch (Exception e) {
-				if (e.getMessage() != null) {
-					frame.setParseResult(e.getMessage(), -1);
-					showErrorMessage(e.getMessage());
-				} else {
-					frame.setParseResult("Not yet parsed", -1);
-					showErrorMessage(e.toString());
-				}
-				expression = null;
-				e.printStackTrace();
+				handleException(e, "Unhandled error");
 			}
 			System.out.println("Current expression: " + expression);
 		}
 	}
 
-	private void showErrorMessage(String message) {
-		JOptionPane.showMessageDialog(new JFrame(), message, "Error", JOptionPane.ERROR_MESSAGE);
+	protected void handleException(Exception e, String title) {
+		if (e.getMessage() != null) {
+			int index = e.getMessage().lastIndexOf("Exception:");
+			if (index < 0)
+				index = 0;
+			else
+				index += 11;
+			frame.setParseResult(e.getMessage().substring(index), -1);
+			showErrorMessage(e.getMessage().substring(index), title);
+		} else {
+			frame.setParseResult("Not yet parsed", -1);
+			showErrorMessage(e.toString(), title);
+		}
+		expression = null;
+		e.printStackTrace();
+	}
+
+	private void showInfoMessage(String message) {
+		JOptionPane.showMessageDialog(new JFrame(), message, "Info", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	private void showErrorMessage(String message, String title) {
+		JOptionPane.showMessageDialog(new JFrame(), message, title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public void drawGraph(String start, String end) {
@@ -56,13 +75,13 @@ public class MainClass {
 			try {
 				funcData = new FunctionDrawingData(expression, Double.parseDouble(start), Double.parseDouble(end));
 			} catch (NumberFormatException e) {
-				showErrorMessage("Incorrect range, will draw with default range instead");
+				showInfoMessage("Incorrect range, will draw with default range instead");
 				funcData = new FunctionDrawingData(expression);
 			}
 			MainGraph graph = new MainGraph(funcData);
 			graph.setVisible(true);
 		} else {
-			showErrorMessage("There is no parsed exception!");
+			showInfoMessage("There is no parsed exception!");
 		}
 	}
 
@@ -73,10 +92,10 @@ public class MainClass {
 				String result = "Result for " + argument + " is: " + expression.calculate(argument);
 				JOptionPane.showMessageDialog(new JFrame(), result, "Result", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				showErrorMessage("There is no parsed exception!");
+				showInfoMessage("There is no parsed exception!");
 			}
 		} catch (NumberFormatException e) {
-			showErrorMessage("Argument needs to be a number!");
+			showErrorMessage("Argument needs to be a number!", "Error: Not a number");
 		}
 	}
 

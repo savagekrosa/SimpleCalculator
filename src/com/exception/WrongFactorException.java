@@ -1,6 +1,6 @@
 package com.exception;
 
-public class WrongFactorException extends RuntimeException {
+public class WrongFactorException extends SimpleExpressionParseException {
 
 	public WrongFactorException(int current) {
 		super("You can't set negative factors, got: " + current);
