@@ -34,7 +34,7 @@ public class MainClass {
 		} else {
 			try {
 				postfix = InfixToPostfixParser.parse(expressionText);
-				expression = new CalculatedExpression(expressionText);
+				expression = new CalculatedExpression(postfix);
 				frame.setParseResult(expression.toString(), 1);
 				showInfoMessage("Parse successful!\nPostfix expression: " + postfix);
 			} catch (InfixParseException e) {

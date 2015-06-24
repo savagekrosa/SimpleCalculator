@@ -11,9 +11,9 @@ public class CalculatedExpression {
 
 	private SimpleExpression result;
 
-	public CalculatedExpression(String expression) throws ExpressionParseException {
+	public CalculatedExpression(String postfixExpression) throws ExpressionParseException {
 		try {
-			result = convertToExpressionType(expression);
+			result = convertToExpressionType(postfixExpression);
 		} catch (SimpleExpressionParseException e) {
 			throw new ExpressionParseException(e);
 		}
