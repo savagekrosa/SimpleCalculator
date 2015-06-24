@@ -1,8 +1,8 @@
 package com.exception;
 
-public class WrongOperatorException extends SimpleExpressionParseException {
+public class WrongOperatorException extends ExpressionParseException {
 
-	public WrongOperatorException(String message, String postfix) {
+	public WrongOperatorException(String message) {
 		super(message);
 	}
 

@@ -4,22 +4,18 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import com.exception.ExpressionParseException;
-import com.exception.InfixParseException;
 import com.exception.SimpleExpressionParseException;
 import com.exception.WrongOperatorException;
-import com.parser.InfixToPostfixParser;
 
 public class CalculatedExpression {
 
 	private SimpleExpression result;
-	private String postfix;
 
-	public CalculatedExpression(String expression) throws InfixParseException, ExpressionParseException {
-		postfix = InfixToPostfixParser.parse(expression);
+	public CalculatedExpression(String expression) throws ExpressionParseException {
 		try {
-			result = convertToExpressionType(postfix);
+			result = convertToExpressionType(expression);
 		} catch (SimpleExpressionParseException e) {
-			throw new ExpressionParseException(e, postfix);
+			throw new ExpressionParseException(e);
 		}
 	}
 
@@ -52,13 +48,13 @@ public class CalculatedExpression {
 		}
 
 		if (stack.size() != 1) {
-			throw new ExpressionParseException("There are " + (stack.size() - 1) + " extra symbol(s) " + "in postfix expression", postfix);
+			throw new ExpressionParseException("There are " + (stack.size() - 1) + " extra symbol(s) " + "in postfix expression");
 		}
 		return stack.pop();
 	}
 
 	protected SimpleExpression simpleCalculate(char operator, SimpleExpression value1, SimpleExpression value2)
-			throws SimpleExpressionParseException {
+			throws SimpleExpressionParseException, WrongOperatorException {
 		switch (operator) {
 			case '*':
 				return value2.multiply(value1);
@@ -71,7 +67,7 @@ public class CalculatedExpression {
 			case '^':
 				return value2.exponent(value1);
 		}
-		throw new WrongOperatorException(operator + " is not a proper operator", postfix);
+		throw new WrongOperatorException(operator + " is not a proper operator");
 	}
 
 	public SimpleExpression getResult() {

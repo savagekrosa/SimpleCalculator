@@ -6,7 +6,7 @@ public class IncorrectPowerException extends SimpleExpressionParseException {
 		super("Unexpected power in exponentiation, should be non-negative integer, got: " + i);
 	}
 
-	public IncorrectPowerException(Number pow, Integer i, String postfix) {
+	public IncorrectPowerException(Number pow, Integer i) {
 		super("Only simple integers can be used as power, instead got " + i + "th factor of " + pow);
 	}
 }
