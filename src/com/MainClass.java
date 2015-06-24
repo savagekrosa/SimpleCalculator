@@ -28,7 +28,7 @@ public class MainClass {
 	public void parseExpression() {
 		String expressionText = frame.getExpressionText();
 		String postfix = null;
-		if (expressionText.isEmpty()) {
+		if (expressionText.trim().isEmpty()) {
 			frame.setParseResult("Not yet parsed", 0);
 			expression = null;
 		} else {
